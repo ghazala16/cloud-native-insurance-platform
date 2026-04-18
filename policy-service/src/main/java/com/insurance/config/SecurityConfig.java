@@ -25,12 +25,18 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
 
-                        // 🔥 Allow GET for both roles
+                        // 👇 READ access (ADMIN + USER)
                         .requestMatchers(HttpMethod.GET, "/api/policies/**")
                         .hasAnyRole("ADMIN", "USER")
 
-                        // 🔥 Restrict POST ONLY to ADMIN
+                        // 👇 WRITE access (ADMIN only)
                         .requestMatchers(HttpMethod.POST, "/api/policies/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.PUT, "/api/policies/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.DELETE, "/api/policies/**")
                         .hasRole("ADMIN")
 
                         .anyRequest().authenticated()
